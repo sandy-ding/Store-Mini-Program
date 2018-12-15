@@ -3,7 +3,7 @@
  */
 
 // 此处主机域名修改成腾讯云解决方案分配的域名
-var host = 'https://j8ltlppd.qcloud.la';
+var host = 'https://j8ltlppd.qcloud.la/';
 
 var config = {
 
@@ -23,7 +23,13 @@ var config = {
         // 上传图片接口
         uploadUrl: `${host}/weapp/upload`,
 
-        productList:`${host}/weapp/product`
+        productList: `${host}/weapp/product`,
+
+        productDetail: `${host}/weapp/product/`,
+
+        addOrder: `${host}/weapp/order`,
+
+        orderList: `${host}/weapp/order`,
     }
 };
 

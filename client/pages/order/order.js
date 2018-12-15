@@ -1,3 +1,7 @@
+const qcloud = require('../../vendor/wafer2-client-sdk/index.js')
+const config = require('../../config.js')
+const app = getApp()
+
 // pages/order/order.js
 Page({
 
@@ -5,14 +9,70 @@ Page({
    * 页面的初始数据
    */
   data: {
-
+    userInfo: null,
+    lcoationAuthType: app.data.locationAuthType,
+    orderList: [],
   },
 
   /**
    * 生命周期函数--监听页面加载
    */
   onLoad: function (options) {
+    
+  },
 
+  getOrder(){
+    wx.showLoading({
+      title: '刷新订单数据',
+    })
+
+    qcloud.request ({
+      url:config.service.orderList,
+      login:true,
+      success: result => {
+        console.log("123");
+        wx.hideLoading()
+
+        let data = result.data
+        console.log(data)
+        if (!data.code){
+          this.setData({
+            orderList:data.data
+          })
+        } else {
+          wx.showToast({
+            icon:'none',
+            title: '刷新订单数据失败',
+          })
+        }
+      },
+      fail: () => {
+        wx.hideLoading()
+
+        wx.showToast({
+          icon: 'none',
+          title: '刷新订单数据失败',
+        })
+      }
+    })
+  },
+
+  onTapLogin: function () {
+    app.login({
+      success: ({ userInfo }) => {
+        this.setData({
+          userInfo,
+          locationAuthType: app.data.locationAuthType
+        })
+      },
+      error: () => {
+        this.setData({
+          locationAuthType: app.data.locationAuthType
+        })
+      }
+    })
+    
+    this.getOrder()
   },
 
   /**
@@ -26,7 +86,17 @@ Page({
    * 生命周期函数--监听页面显示
    */
   onShow: function () {
-
+    this.setData({
+      locationAuthType: app.data.locationAuthType
+    })
+    app.checkSession({
+      success: ({ userInfo }) => {
+        this.setData({
+          userInfo
+        })
+        this.getOrder()
+      }
+    })
   },
 
   /**

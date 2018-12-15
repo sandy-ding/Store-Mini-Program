@@ -1,3 +1,5 @@
+const app = getApp()
+
 // pages/trolley/trolley.js
 Page({
 
@@ -5,7 +7,8 @@ Page({
    * 页面的初始数据
    */
   data: {
-
+    userInfo: null,
+    lcoationAuthType: app.data.locationAuthType
   },
 
   /**
@@ -13,6 +16,22 @@ Page({
    */
   onLoad: function (options) {
 
+  },
+
+  onTapLogin: function () {
+    app.login({
+      success: ({ userInfo }) => {
+        this.setData({
+          userInfo,
+          locationAuthType: app.data.locationAuthType
+        })
+      },
+      error: () => {
+        this.setData({
+          locationAuthType: app.data.locationAuthType
+        })
+      }
+    })
   },
 
   /**
@@ -26,7 +45,16 @@ Page({
    * 生命周期函数--监听页面显示
    */
   onShow: function () {
-
+    this.setData({
+      locationAuthType: app.data.locationAuthType
+    })
+    app.checkSession({
+      success: ({ userInfo }) => {
+        this.setData({
+          userInfo
+        })
+      }
+    })
   },
 
   /**
