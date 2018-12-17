@@ -8,7 +8,7 @@ Page({
    * 页面的初始数据
    */
   data: {
-    product: {}
+    product: {},
   },
 
   getProduct(id){
@@ -58,7 +58,8 @@ Page({
       login: true,
       method: 'POST',
       data: {
-        list: [product]
+        list: [product],
+        isInstanceBuy: true
       },
       success: result => {
         wx.hideLoading()
@@ -85,6 +86,54 @@ Page({
         })
       }
     })
+  },
+
+  addToTrolley(){
+    wx.showLoading({
+      title: '正在添加到购物车...',
+    })
+
+    qcloud.request({
+      url:config.service.addTrolley,
+      login: true,
+      method: 'PUT',
+      data: {
+        id:this.data.product
+      },
+      success: result =>{
+        wx.hideLoading()
+
+        let data = result.data
+
+        if (!data.code){
+          wx.showToast({
+            title: '已添加到购物车',
+          })
+        } else {
+          wx.showToast({
+            icon:'none',
+            title: '添加购物车失败',
+          })
+        } 
+      },
+      fail:() => {
+        wx,wx.hideLoading()
+
+        wx.showToast({
+          icon: 'none',
+          title: '添加购物车失败',
+        })
+      }
+    })
+  },
+
+  onTapCommentEntry(){
+    let product = this.data.product
+    if (this.data.commentCount) {
+      wx.navigateTo({
+        url: `/pages/comment/comment?id=${product.id}&price=${product.price}&name=${product.name}&image=${product.image}`
+      })
+    }
   },
 
   /**

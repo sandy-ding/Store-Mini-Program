@@ -30,6 +30,14 @@ var config = {
         addOrder: `${host}/weapp/order`,
 
         orderList: `${host}/weapp/order`,
+
+        addTrolley: `${host}/weapp/trolley`,
+
+        updateTrolley: `${host}/weapp/trolley`,
+
+        addComment: `${host}/weapp/comment`,
+
+        commentList: `${host}/weapp/comment`
     }
 };
 
